@@ -2,15 +2,24 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>School Chat</title>
+<title>L-Gate Chat</title>
 
 <style>
+
 body{
+margin:0;
 font-family:sans-serif;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#1c92d2);
+background-size:400% 400%;
+animation:bg 12s ease infinite;
 color:white;
 text-align:center;
-margin:0;
+}
+
+@keyframes bg{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
 }
 
 #welcome{
@@ -28,33 +37,49 @@ align-items:center;
 
 button{
 padding:10px 20px;
-font-size:18px;
 border:none;
 border-radius:10px;
 background:#00c3ff;
 color:white;
 cursor:pointer;
+margin:3px;
 }
 
-#chat{
+#app{
 display:none;
 padding:20px;
+max-width:600px;
+margin:auto;
 }
 
 #messages{
-height:300px;
+height:350px;
 overflow:auto;
 background:rgba(255,255,255,0.1);
 padding:10px;
 border-radius:10px;
+margin-bottom:10px;
+}
+
+.post{
+background:rgba(0,0,0,0.5);
+padding:10px;
+margin:6px;
+border-radius:8px;
+text-align:left;
+}
+
+.name{
+font-weight:bold;
 }
 
 input{
 padding:10px;
-margin:5px;
-border-radius:10px;
 border:none;
+border-radius:8px;
+margin:5px;
 }
+
 </style>
 
 </head>
@@ -67,7 +92,7 @@ border:none;
 <button onclick="enter()">OK</button>
 </div>
 
-<div id="chat">
+<div id="app">
 
 <h1>学校チャット</h1>
 
@@ -75,7 +100,7 @@ border:none;
 
 <div id="messages"></div>
 
-<input id="message" placeholder="メッセージ">
+<input id="msg" placeholder="メッセージ">
 <button onclick="send()">送信</button>
 
 </div>
@@ -84,24 +109,75 @@ border:none;
 
 function enter(){
 document.getElementById("welcome").style.display="none"
-document.getElementById("chat").style.display="block"
+document.getElementById("app").style.display="block"
+load()
 }
 
 function send(){
 
 let name=document.getElementById("name").value
-let msg=document.getElementById("message").value
+let msg=document.getElementById("msg").value
 
 if(name==""||msg=="")return
 
+let data=JSON.parse(localStorage.getItem("chat")||"[]")
+
+data.push({name:name,text:msg,likes:0})
+
+localStorage.setItem("chat",JSON.stringify(data))
+
+document.getElementById("msg").value=""
+
+load()
+
+}
+
+function like(i){
+
+let data=JSON.parse(localStorage.getItem("chat"))
+
+data[i].likes++
+
+localStorage.setItem("chat",JSON.stringify(data))
+
+load()
+
+}
+
+function del(i){
+
+let data=JSON.parse(localStorage.getItem("chat"))
+
+data.splice(i,1)
+
+localStorage.setItem("chat",JSON.stringify(data))
+
+load()
+
+}
+
+function load(){
+
 let messages=document.getElementById("messages")
 
+messages.innerHTML=""
+
+let data=JSON.parse(localStorage.getItem("chat")||"[]")
+
+data.forEach(function(m,i){
+
 let div=document.createElement("div")
-div.textContent=name+" : "+msg
+
+div.className="post"
+
+div.innerHTML=
+"<span class='name'>"+m.name+"</span>: "+m.text+
+"<br><button onclick='like("+i+")'>👍 "+m.likes+"</button>"+
+"<button onclick='del("+i+")'>削除</button>"
 
 messages.appendChild(div)
 
-document.getElementById("message").value=""
+})
 
 }
 
