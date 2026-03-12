@@ -1,1 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>School Chat</title>
 
+<style>
+body{
+font-family:sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+text-align:center;
+margin:0;
+}
+
+#welcome{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+button{
+padding:10px 20px;
+font-size:18px;
+border:none;
+border-radius:10px;
+background:#00c3ff;
+color:white;
+cursor:pointer;
+}
+
+#chat{
+display:none;
+padding:20px;
+}
+
+#messages{
+height:300px;
+overflow:auto;
+background:rgba(255,255,255,0.1);
+padding:10px;
+border-radius:10px;
+}
+
+input{
+padding:10px;
+margin:5px;
+border-radius:10px;
+border:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="welcome">
+<h1>サイトへようこそ</h1>
+<p>ルールを守って使ってね</p>
+<button onclick="enter()">OK</button>
+</div>
+
+<div id="chat">
+
+<h1>学校チャット</h1>
+
+<input id="name" placeholder="名前">
+
+<div id="messages"></div>
+
+<input id="message" placeholder="メッセージ">
+<button onclick="send()">送信</button>
+
+</div>
+
+<script>
+
+function enter(){
+document.getElementById("welcome").style.display="none"
+document.getElementById("chat").style.display="block"
+}
+
+function send(){
+
+let name=document.getElementById("name").value
+let msg=document.getElementById("message").value
+
+if(name==""||msg=="")return
+
+let messages=document.getElementById("messages")
+
+let div=document.createElement("div")
+div.textContent=name+" : "+msg
+
+messages.appendChild(div)
+
+document.getElementById("message").value=""
+
+}
+
+</script>
+
+</body>
+</html>
